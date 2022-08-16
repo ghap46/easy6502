@@ -4,51 +4,52 @@ layout: default
 
 <h2 id="intro">Introduction</h2>
 
-In this tiny ebook I'm going to show you how to get started writing 6502
-assembly language. The 6502 processor was massive in the seventies and
-eighties, powering famous computers like the
-[BBC Micro](http://en.wikipedia.org/wiki/BBC_Micro),
-[Atari 2600](http://en.wikipedia.org/wiki/Atari_2600),
-[Commodore 64](http://en.wikipedia.org/wiki/Commodore_64),
-[Apple II](http://en.wikipedia.org/wiki/Apple_II), and the [Nintendo Entertainment
-System](http://en.wikipedia.org/wiki/Nintendo_Entertainment_System). Bender in
-Futurama [has a 6502 processor for a
-brain](http://www.transbyte.org/SID/SID-files/Bender_6502.jpg). [Even the
-Terminator was programmed in
+Neste pequeno ebook eu irei te mostrar como você pode começar a escrever
+código na linguagem assembly do 6502. O processador 6502 era
+importantíssimo nos anos setenta e oitenta, sendo parte de computadores
+como os 
+[BBC Micro](http://pt.wikipedia.org/wiki/BBC_Micro),
+[Atari 2600](http://pt.wikipedia.org/wiki/Atari_2600),
+[Commodore 64](http://pt.wikipedia.org/wiki/Commodore_64),
+[Apple II](http://pt.wikipedia.org/wiki/Apple_II), e o [Nintendo Entertainment
+System](http://pt.wikipedia.org/wiki/Nintendo_Entertainment_System). O Bender de
+Futurama [tem um processador 6502 como cérebro](http://www.transbyte.org/SID/SID-files/Bender_6502.jpg). [Até mesmo
+ o Exterminador do Futuro foi programado em um
 6502](http://www.pagetable.com/docs/terminator/00-37-23.jpg).
 
-So, why would you want to learn 6502? It's a dead language isn't it? Well,
-so's Latin. And they still teach that.
-[Q.E.D.](http://en.wikipedia.org/wiki/Q.E.D.)
+Então por que você iria querer aprender assembly de 6502? é uma linguagem
+morta, não é? Bem, latim também o é, e ainda o ensinam. 
+[Q.E.D.](http://pt.wikipedia.org/wiki/Q.E.D.)
 
-(Actually, I've been reliably informed that 6502 processors are still being
-produced by [Western Design Center](http://www.westerndesigncenter.com/wdc/w65c02s-chip.cfm)
-and [sold to hobbyists](http://www.mouser.co.uk/Search/Refine.aspx?Keyword=65C02), so clearly 6502
-*isn't* a dead language! Who knew?)
+(Na verdade, fui informado de fontes confiáveis que os processadores 6502
+ainda estão sendo produzidos pela) [Western Design Center](http://www.westerndesigncenter.com/wdc/w65c02s-chip.cfm)
+e [vendida para amadores](http://www.mouser.co.uk/Search/Refine.aspx?Keyword=65C02), então, claramente
+a linguagem assembly de 6502 *não é* uma linguagem morta! Quem iria imaginar?)
 
-Seriously though, I think it's valuable to have an understanding of assembly
-language. Assembly language is the lowest level of abstraction in computers -
-the point at which the code is still readable. Assembly language translates
-directly to the bytes that are executed by your computer's processor.
-If you understand how it works, you've basically become a computer
-[magician](http://skilldrick.co.uk/2011/04/magic-in-software-development/).
+Mas, falando sério, eu acho que é valioso ter uma compreensão de assembly.
+A linguagem assembly é o menor nível de abstração em computadores, o ponto
+final onde o código ainda é legível para humanos. As linguagens assembly
+traduzem diretamente para os bytes que serão executados pelo processador
+do seu computador. Se você entende como ele funciona, você basicamente
+virou um [mago](http://skilldrick.co.uk/2011/04/magic-in-software-development/) dos computadores.
 
-Then why 6502? Why not a *useful* assembly language, like
-[x86](http://en.wikipedia.org/wiki/X86)? Well, I don't think learning x86 is
-useful. I don't think you'll ever have to *write* assembly language in your day
-job - this is purely an academic exercise, something to expand your mind and
-your thinking. 6502 was originally written in a different age, a time when the majority of
-developers were writing assembly directly, rather than in these new-fangled
-high-level programming languages. So, it was designed to be written by humans.
-More modern assembly languages are meant to written by compilers, so let's
-leave it to them. Plus, 6502 is *fun*. Nobody ever called x86 *fun*.
+Então por que 6502? Por que não uma linguagem assembly *útil*, como [x86](http://pt.wikipedia.org/wiki/X86)?
+Bem, eu não acho que aprender assembly de x86 é útil. Não acho que você
+irá *escrever* assembly no dia a dia do seu trabalho.  Isso é puramente
+um exercício acadêmico, algo para expandir sua mente e sua forma de
+pensar. 6502 foi originalmente escrito em uma outra era, num tempo onde
+os programadores escreviam em assembly diretamente, ao invés de usar
+linguagens modernas e de alto nível. Então foi projetada para ser escrita
+por humanos. Linguagens assembly contemporâneas são projetadas para serem
+escritas por compiladores, então deixarêmo-nas para eles. Ademais, 6502
+é *divertido*. Ninguém nunca chamou x86 de *divertido*.
 
+<h2 id="first-program">Nosso primeiro programa</h2>
 
-<h2 id="first-program">Our first program</h2>
-
-So, let's dive in! That thing below is a little [JavaScript 6502 assembler and
-simulator](https://github.com/skilldrick/6502js) that I adapted for this book.
-Click **Assemble** then **Run** to assemble and run the snippet of assembly language.
+Então, mãos na massa! O que você vê abaixo é um pequeno [assembler e
+simulador de 6502 em JavaScript](https://github.com/skilldrick/6502js) que eu adaptei para este livro.
+Clique em **Montar** e então em **Executar** para montar e executar
+o código em assembly de 6502.
 
 {% include start.html %}
 LDA #$01
