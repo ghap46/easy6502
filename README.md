@@ -3,6 +3,7 @@
 
 Easy6502, por Nick Morgan, é um tutorial conciso e acessível da linguagem de programação assembly do processador 6502, incluindo uma série de exemplos funcionais de programas editáveis e executáveis no emulador incluido.
 
+Veja um exemplo funcional deste site em https://ghap46.github.io/easy6502/.
 Veja http://skilldrick.github.io/easy6502/ para o site original.
 
 Confira outros forks ativos para refinamentos adicionais e desenvolvimentos do tutorial e do emulador em:
