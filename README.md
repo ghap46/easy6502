@@ -1,13 +1,9 @@
 # easy6502
-[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![Licença: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
-Easy6502 by Nick Morgan is one-stop accessible tutorial on 6502 assembly language programming,
-including a series of worked example programs which you can edit and run in the embedded emulator.
+Easy6502, por Nick Morgan, é um tutorial conciso e acessível da linguagem de programação assembly do processador 6502, incluindo uma série de exemplos funcionais de programas editáveis e executáveis no emulador incluido.
 
-See http://skilldrick.github.io/easy6502/ for the live site.
+Veja http://skilldrick.github.io/easy6502/ para o site original.
 
-This (original) fork is now in a strict maintenance-only mode. Pull requests are welcome for bug fixes.
-
-Please see other active forks for further refinements and developments of the tutorial and the emulator:
+Confira outros forks ativos para refinamentos adicionais e desenvolvimentos do tutorial e do emulador em:
 https://github.com/skilldrick/easy6502/network
-
