@@ -1494,7 +1494,7 @@ function SimulatorWidget(node) {
       },
 
       ierr: function () {
-        message("Address $" + addr2hex(regPC) + " - unknown opcode");
+        message("Endereço $" + addr2hex(regPC) + " - opcode desconhecido");
         codeRunning = false;
       }
     };
@@ -1504,7 +1504,7 @@ function SimulatorWidget(node) {
       regSP--;
       if (regSP < 0) {
         regSP &= 0xff;
-        message("6502 Stack filled! Wrapping...");
+        message("Stack do 6502 preenchida! Voltando do início...");
       }
     }
 
@@ -1513,7 +1513,7 @@ function SimulatorWidget(node) {
       regSP++;
       if (regSP >= 0x100) {
         regSP &= 0xff;
-        message("6502 Stack emptied! Wrapping...");
+        message("Stack do 6502 esvaziada! Voltando do início...");
       }
       value = memory.get(regSP + 0x100);
       return value;
@@ -1577,7 +1577,7 @@ function SimulatorWidget(node) {
 
       if ((regPC === 0) || (!codeRunning && !debugging)) {
         stop();
-        message("Program end at PC=$" + addr2hex(regPC - 1));
+        message("Programa terminou em PC=$" + addr2hex(regPC - 1));
         ui.stop();
       }
     }
@@ -1660,7 +1660,7 @@ function SimulatorWidget(node) {
         }
       }
       if (addr === 0) {
-        message("Unable to find/parse given address/label");
+        message("Incapaz de encontrar/parsear o endereço/rótulo passado");
       } else {
         regPC = addr;
       }
@@ -1695,7 +1695,7 @@ function SimulatorWidget(node) {
     function stop() {
       codeRunning = false;
       clearInterval(executeId);
-      message("\nStopped\n");
+      message("\nParado\n");
     }
 
     function toggleMonitor (state) {
@@ -1722,7 +1722,7 @@ function SimulatorWidget(node) {
     function indexLines(lines, symbols) {
       for (var i = 0; i < lines.length; i++) {
         if (!indexLine(lines[i], symbols)) {
-          message("**Label already defined at line " + (i + 1) + ":** " + lines[i]);
+          message("**Rótulo já definido na linha " + (i + 1) + ":** " + lines[i]);
           return false;
         }
       }
@@ -1742,7 +1742,7 @@ function SimulatorWidget(node) {
         var label = input.replace(/(^\w+):.*$/, "$1");
         
         if (symbols.lookup(label)) {
-          message("**Label " + label + "is already used as a symbol; please rename one of them**");
+          message("**Rótulo " + label + "Já está sendo usado como um símbolo, renomeie uma delas**");
           return false;
         }
         
@@ -1903,10 +1903,10 @@ function SimulatorWidget(node) {
       var lines = code.split("\n");
       codeAssembledOK = true;
 
-      message("Preprocessing ...");
+      message("Pré processando...");
       var symbols = preprocess(lines);
 
-      message("Indexing labels ...");
+      message("Indexando rótulos...");
       defaultCodePC = BOOTSTRAP_ADDRESS;
       if (!labels.indexLines(lines, symbols)) {
         return false;
@@ -1914,7 +1914,7 @@ function SimulatorWidget(node) {
       labels.displayMessage();
 
       defaultCodePC = BOOTSTRAP_ADDRESS;
-      message("Assembling code ...");
+      message("Montando assembly...");
       
       codeLen = 0;
       for (var i = 0; i < lines.length; i++) {
@@ -1926,7 +1926,7 @@ function SimulatorWidget(node) {
 
       if (codeLen === 0) {
         codeAssembledOK = false;
-        message("No code to run.");
+        message("Nenhum código para executar.");
       }
 
       if (codeAssembledOK) {
@@ -1937,16 +1937,16 @@ function SimulatorWidget(node) {
         var str = lines[i].replace("<", "&lt;").replace(">", "&gt;");
 
         if(!wasOutOfRangeBranch) {
-          message("**Syntax error line " + (i + 1) + ": " + str + "**");
+          message("**Erro de síntaxe na linha " + (i + 1) + ": " + str + "**");
         } else {
-          message('**Out of range branch on line ' + (i + 1) + ' (branches are limited to -128 to +127): ' + str + '**');
+          message('**Ramificação fora de alcance na linha ' + (i + 1) + ' (ramificações são limitadas ao intervalo de -128 até +127): ' + str + '**');
         }
 
         ui.initialize();
         return false;
       }
 
-      message("Code assembled successfully, " + codeLen + " bytes.");
+      message("Código montado com sucesso, " + codeLen + " bytes.");
       return true;
     }
 
@@ -2026,7 +2026,7 @@ function SimulatorWidget(node) {
           addr = parseInt(param, 10);
         }
         if ((addr < 0) || (addr > 0xffff)) {
-          message("Unable to relocate code outside 64k memory");
+          message("Incapaz de realocar código fora da memória de 64k");
           return false;
         }
         defaultCodePC = addr;
