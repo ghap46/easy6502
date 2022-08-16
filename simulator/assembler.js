@@ -1798,8 +1798,8 @@ function SimulatorWidget(node) {
     }
 
     function displayMessage() {
-      var str = "Found " + labelIndex.length + " label";
-      if (labelIndex.length !== 1) {
+      var str = "Foram identificados " + labelIndex.length + " rótulo";
+      if (labelIndex.length !== 1 || labelIndex.length === 0) {
         str += "s";
       }
       message(str + ".");
