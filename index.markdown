@@ -2,7 +2,7 @@
 layout: default
 ---
 
-<h2 id="intro">Introduction</h2>
+<h2 id="intro">Introducão</h2>
 
 Neste pequeno ebook eu irei te mostrar como você pode começar a escrever
 código na linguagem assembly do 6502. O processador 6502 era
@@ -60,87 +60,97 @@ LDA #$08
 STA $0202
 {% include end.html %}
 
-Hopefully the black area on the right now has three coloured "pixels" at the
-top left. (If this doesn't work, you'll probably need to upgrade your browser to
-something more modern, like Chrome or Firefox.)
+É esperado que a área preta à direita agora tenha três "pixels" coloridos
+no canto superior esquerdo. (Se isso não funcionou como esperado, você
+provavelmente terá que atualizar seu navegador para algo mais moderno,
+como o Chrome ou Firefox.)
 
-So, what's this program actually doing? Let's step through it with the
-debugger. Hit **Reset**, then check the **Debugger** checkbox to start the
-debugger. Click **Step** once. If you were watching carefully, you'll have
-noticed that `A=` changed from `$00` to `$01`, and `PC=` changed from `$0600` to
-`$0602`.
+Então, o que esse programa está realmente fazendo? Vamos analizá-lo passo
+a passo com o debugador. Clique em **Reiniciar**, então marque a caixa
+que diz **Debugador** para iniciar o debugador. Clique em **Passo** uma
+vez. Se você observou com atenção, terá notado que `A=`
+mudou de `$00` para `$01`, e `PC=` mudou de `$0600` para `$0602`.
 
-Any numbers prefixed with `$` in 6502 assembly language (and by extension, in
-this book) are in hexadecimal (hex) format. If you're not familiar with hex
-numbers, I recommend you read [the Wikipedia
-article](http://en.wikipedia.org/wiki/Hexadecimal). Anything prefixed with `#`
-is a literal number value. Any other number refers to a memory location.
+Quaisquer números prefixados com um `$` na linguagem assembly do 6502
+(e, por extensão, nesse livro) estão no formato hexadecimal (hex).
+Se você não está familiarizado com números hexadecimais, eu recomendo que
+você leia [o artigo da Wikipédia](http://pt.wikipedia.org/wiki/Hexadecimal) sobre o  assunto.
+Qualquer coisa prefixada com um `#` é um valor numérico literal. Qualquer
+outro número se refere a um lugar na memória.
 
-Equipped with that knowledge, you should be able to see that the instruction
-`LDA #$01` loads the hex value `$01` into register `A`. I'll go into more
-detail on registers in the next section.
+Equipado com esse conhecimento, você deve ser capaz de observar que a
+instrução `LDA #$01` carrega o valor hexadecimal `$01` para o registrador
+`A`. Entrarei em mais detalhes sobre registradores na próxima seção.
 
-Press **Step** again to execute the second instruction. The top-left pixel of
-the simulator display should now be white. This simulator uses the memory
-locations `$0200` to `$05ff` to draw pixels on its display. The values `$00` to
-`$0f` represent 16 different colours (`$00` is black and `$01` is white), so
-storing the value `$01` at memory location `$0200` draws a white pixel at the
-top left corner. This is simpler than how an actual computer would output
-video, but it'll do for now.
+Clique em **Passo** novamente pare executar a segunda instrução. O
+pixel no canto superior esquerdo do display do simulador deve agora
+estar branco. Esse simulador usa o intervalo de memória entre `$0200`
+e `$05ff` para desenhar pixels no display. Valores de `$00` a `$0f`
+representam 16 cores diferentes (`$00` é preto e `$01` é branco),
+então guardar o valor `$01` na memória no endereço `$0200` irá desenhar
+o pixel branco no canto superior esquerdo. Isso é bem mais simples
+quando comparado ao processo de processamento gráfico de computadores
+reais, mas é o suficiente por agora.
 
-So, the instruction `STA $0200` stores the value of the `A` register to memory
-location `$0200`. Click **Step** four more times to execute the rest of the
-instructions, keeping an eye on the `A` register as it changes.
+Então a instrução `STA $0200` armazena o valor do registrador `A` para
+o endereço `$0200` na memória. Clique em **Passo** mais quatro vezes para
+executar o resto das instruções, se atentando às mudanças no registrador
+`A`.
 
-### Exercises ###
+### Exercícios ###
 
-1. Try changing the colour of the three pixels.
-2. Change one of the pixels to draw at the bottom-right corner (memory location `$05ff`).
-3. Add more instructions to draw extra pixels.
-
-
-<h2 id='registers'>Registers and flags</h2>
-
-We've already had a little look at the processor status section (the bit with
-`A`, `PC` etc.), but what does it all mean?
-
-The first line shows the `A`, `X` and `Y` registers (`A` is often called the
-"accumulator"). Each register holds a single byte. Most operations work on the
-contents of these registers.
-
-`SP` is the stack pointer. I won't get into the stack yet, but basically this
-register is decremented every time a byte is pushed onto the stack, and
-incremented when a byte is popped off the stack.
-
-`PC` is the program counter - it's how the processor knows at what point in the
-program it currently is. It's like the current line number of an executing
-script. In the JavaScript simulator the code is assembled starting at memory
-location `$0600`, so `PC` always starts there.
-
-The last section shows the processor flags. Each flag is one bit, so all seven
-flags live in a single byte. The flags are set by the processor to give
-information about the previous instruction. More on that later. [Read more
-about the registers and flags here](http://www.obelisk.me.uk/6502/registers.html).
+1. Tente alterar a cor dos três pixels.
+2. Mude um dos pixels para que ele seja mostrado no canto inferior direito (endereço de memória `05ff`).
+3. Adicione mais instruções para desenhar pixels adicionais.
 
 
-<h2 id='instructions'>Instructions</h2>
+<h2 id='registers'>Registradores e flags</h2>
 
-Instructions in assembly language are like a small set of predefined functions.
-All instructions take zero or one arguments. Here's some annotated
-source code to introduce a few different instructions:
+Já demos uma olhadinha na seção de status do processador (a parte com
+`A`, `PC`, etc.), mas o que tudo isso significa?
+
+A primeira linha mostra os registradores `A`, `X` e `Y` (O registrador
+`A` é frequentemente chamado de "acumulador"). Cada registrador comporta
+um único byte. A maioria das operações trabalha com o conteúdo desses
+registradores.
+
+`SP` é o ponteiro do stack. Não iremos entrar no tópico de stack ainda,
+mas basicamente esse registrador é decrementado toda vez que um byte é
+"empurrado" para a stack, e incrementado quando um byte é "puxado" da
+stack.
+
+`PC` é o Contador do Programa, é como o processador sabe onde no programa
+ele está atualmente. É como o número da linha de execução atual. No simulador
+em JavaScript o código é montado começando na localização `$0600`, então `PC`
+sempre começará lá.
+
+A última seção mostra os flags do processador. Cada flag é um bit, então
+todos os sete flags ficam armazenados em um único byte. Os flags são
+modificados pelo próprio processador para armazenar informações sobre a
+última instrução executada. Falaremos mais disso depois.
+[Leia mais sobre registradores e flags aqui.](http://www.obelisk.me.uk/6502/registers.html).
+
+
+<h2 id='instructions'>Instruções</h2>
+
+Instruções em uma linguagem assembly são como um pequeno conjunto de
+funções predefinidas. Todas as instruções levam zero ou um argumento.
+Aqui temos um código fonte comentado para introduzir algumas instruções
+novas:
 
 {% include start.html %}
-LDA #$c0  ;Load the hex value $c0 into the A register
-TAX       ;Transfer the value in the A register to X
-INX       ;Increment the value in the X register
-ADC #$c4  ;Add the hex value $c4 to the A register
-BRK       ;Break - we're done
+LDA #$c0  ; Carrega o valor hexadecimal $c0 para o registrador A.
+TAX       ; Transfere o valor do registrador A para X.
+INX       ; Incrementa o valor no registrador X.
+ADC #$c4  ; Adiciona o valor hexadecimal $c4 para o registrador A.
+BRK       ; Quebra o fluxo, o programa termina.
 {% include end.html %}
 
-Assemble the code, then turn on the debugger and step through the code, watching
-the `A` and `X` registers. Something slightly odd happens on the line `ADC #$c4`.
-You might expect that adding `$c4` to `$c0` would give `$184`, but this
-processor gives the result as `$84`. What's up with that?
+Monte o código, e então ligue o debugador e vá passo a passo pelo código,
+atentando aos registradores `A` e `X`. Acontece algo ligeiramente estranho
+na linha que diz `ADC #$c4`. Você poderia imaginar que adicionar `$c4` e `$c0`
+resultaria em `$184`, mas o processador dá como resultado `$84`. O que aconteceu
+aí?
 
 The problem is, `$184` is too big to fit in a single byte (the max is `$FF`),
 and the registers can only hold a single byte.  It's OK though; the processor
