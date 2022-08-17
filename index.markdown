@@ -152,194 +152,217 @@ na linha que diz `ADC #$c4`. Você poderia imaginar que adicionar `$c4` e `$c0`
 resultaria em `$184`, mas o processador dá como resultado `$84`. O que aconteceu
 aí?
 
-The problem is, `$184` is too big to fit in a single byte (the max is `$FF`),
-and the registers can only hold a single byte.  It's OK though; the processor
-isn't actually dumb. If you were looking carefully enough, you'll have noticed
-that the carry flag was set to `1` after this operation. So that's how you
-know.
+O problema é que `$184` é grande demais para caber em um único byte (o máximo
+é `$ff`), e os registradores podem apenas armazenar um byte. Não tem problema,
+o processador não é bobo. Se você observar com atenção, terá notado que o flag
+de carry mudou para `1` depois dessa operação. É assim que você sabe que o
+resultado de uma operação não cabe em um único byte.
 
-In the simulator below **type** (don't paste) the following code:
-
+No simulador abaixo, **digite** (não copie e cole) o seguinte código:
     LDA #$80
     STA $01
     ADC $01
 
 {% include widget.html %}
 
-An important thing to notice here is the distinction between `ADC #$01` and
-`ADC $01`. The first one adds the value `$01` to the `A` register, but the
-second adds the value stored at memory location `$01` to the `A` register.
+Algo importante de se notar aqui é a distinção entre `ADC #$01` e `ADC $01`.
+O primeiro adiciona o valor `$01` ao registrador `A`, mas o segundo adiciona
+o valor armazenado no endereço de memória `$01` ao registrador `A`.
 
-Assemble, check the **Monitor** checkbox, then step through these three
-instructions. The monitor shows a section of memory, and can be helpful to
-visualise the execution of programs. `STA $01` stores the value of the `A`
-register at memory location `$01`, and `ADC $01` adds the value stored at the
-memory location `$01` to the `A` register. `$80 + $80` should equal `$100`, but
-because this is bigger than a byte, the `A` register is set to `$00` and the
-carry flag is set. As well as this though, the zero flag is set. The zero flag
-is set by all instructions where the result is zero.
+Monte, marque a caixa que diz **Monitor**, e vá executando as três instruções
+passo a passo. O monitor mostra seções da memória, e pode ser útil para
+visualizar a execução de programas. `STA $01` armazena o valor do registrador
+`A` no endereço de memória `$01` e `ADC $01` adiciona o valor armazenado no
+endereço de memória `$01` ao registrador `A`. `$80 + $80` deve igualar `$100`,
+mas por ser maior que um byte, o registrador `A` é alterado para `$00` e a flag
+de carry é ativada. Além dessa, a flag zero também é ativada. A flag zero é
+ativada por todas as instruções onde o resultado é zero.
 
-A full list of the 6502 instruction set is [available
-here](http://www.6502.org/tutorials/6502opcodes.html) and
-[here](http://www.obelisk.me.uk/6502/reference.html) (I usually refer to
-both pages as they have their strengths and weaknesses). These pages detail the
-arguments to each instruction, which registers they use, and which flags they
-set. They are your bible.
+Uma lista completa das instruções do 6502 está [disponível aqui](http://www.6502.org/tutorials/6502opcodes.html) e
+[aqui](http://www.obelisk.me.uk/6502/reference.html) (Eu normalmente uso ambas as páginas pois ambas têm seus pros e contras).
+Essas páginas detalham os argumentos de cada instrução, quais registradores
+elas usam, e quais flags elas modificam. A referência é sua bíblia.
 
-### Exercises ###
+### Exercícios ###
 
-1. You've seen `TAX`. You can probably guess what `TAY`, `TXA` and `TYA` do,
-   but write some code to test your assumptions.
-2. Rewrite the first example in this section to use the `Y` register instead of
-   the `X` register.
-3. The opposite of `ADC` is `SBC` (subtract with carry). Write a program that
-   uses this instruction.
+1. Você já viu a instrução `TAX` e provavelmente pode deduzir o que
+   as instruções `TAY`, `TXA` e `TYA` fazem, mas escreva algum código para
+testá-las e confirmar seu palpite.
+2. Reescreva o primeiro exemplo desta seção de forma que ele utilize
+   o registrador `Y` ao invés do registrador `X`.
+3. O oposto de `ADC` é `SBC` (Subtrair com carry). Escreva um programa
+   que utilize esta instrução.
 
 
-<h2 id='branching'>Branching</h2>
+<h2 id='branching'>Ramificações</h2>
 
-So far we're only able to write basic programs without any branching logic.
-Let's change that.
+Até agora só fomos capazes de escrever programas básicos sem nenhuma
+lógica que se utilize de ramificação. Vamos mudar isso.
 
-6502 assembly language has a bunch of branching instructions, all of which
-branch based on whether certain flags are set or not. In this example we'll be
-looking at `BNE`: "Branch on not equal".
+A linguagem assembly do 6502 tem diversas funções de ramificação, todas
+as quais ramificam o programa dependendo de quais flags do processador
+estão ativadas ou não. Neste exemplo estaremos dando uma olhada na
+instrução `BNE`: "Ramificar em desigualdade".
 
 {% include start.html %}
   LDX #$08
-decrement:
+decrementar:
   DEX
   STX $0200
   CPX #$03
-  BNE decrement
+  BNE decrementar
   STX $0201
   BRK
 {% include end.html %}
 
-First we load the value `$08` into the `X` register. The next line is a label.
-Labels just mark certain points in a program so we can return to them later.
-After the label we decrement `X`, store it to `$0200` (the top-left pixel), and
-then compare it to the value `$03`.
-[`CPX`](http://www.obelisk.me.uk/6502/reference.html#CPX) compares the
-value in the `X` register with another value. If the two values are equal, the
-`Z` flag is set to `1`, otherwise it is set to `0`.
+Primeiro carregamos o valor `$08` no registrador `X`. A próxima linha é um
+rótulo. Rótulos apenas marcam certos pontos no programa para que possamos
+retornar a eles em algum momento. Depois do rótulo, decrementamos `X`,
+guardamos ele em `$0200` (O pixel superior esquerdo), e então comparamos
+ele com o valor `$03`.
+[`CPX`](http://www.obelisk.me.uk/6502/reference.html#CPX) compara o valor no registrador `X` com algum outro valor. Se eles
+forem iguais, a flag `Z` é alterada para `1`, caso contrário é alterada
+para `0`.
 
-The next line, `BNE decrement`, will shift execution to the decrement label if
-the `Z` flag is set to `0` (meaning that the two values in the `CPX` comparison
-were not equal), otherwise it does nothing and we store `X` to `$0201`, then
-finish the program.
+A próxima linha, `BNE decrementar`, irá alterar o ponto de execução do programa
+para o rótulo `decrementar` caso a flag `Z` tenha como valor `0` (significando
+que os dois valores da comparação `CPX` não são iguais), caso contrário nada
+será feito e guardaremos o registrador `X` no endereço `$0201`, e encerramos
+o programa.
 
-In assembly language, you'll usually use labels with branch instructions. When
-assembled though, this label is converted to a single-byte relative offset (a
-number of bytes to go backwards or forwards from the next instruction) so
-branch instructions can only go forward and back around 256 bytes. This means
-they can only be used to move around local code. For moving further you'll need
-to use the jumping instructions.
+Nas linguagens assembly, você geralmente fará uso de rótulos com instruções
+de ramificação. Porém, quando o programa é montado, o rótulo é convertido
+para um único byte que representa um deslocamento relativo (Um número em
+bytes que armazena a quantas instruções para frente ou para trás o programa
+deve continuar a execução), o que significa que instruções de ramificação
+podem pular mais ou menos 127 instruções para frente ou para trás. Isso
+significa que elas podem ser usadas apenas para mover o fluxo do programa
+através de código local. Para maiores distâncias, você irá precisar usar as
+instruções de salto.
 
-### Exercises ###
+### Exercícios ###
 
-1. The opposite of `BNE` is `BEQ`. Try writing a program that uses `BEQ`.
-2. `BCC` and `BCS` ("branch on carry clear" and "branch on carry set") are used
-   to branch on the carry flag. Write a program that uses one of these two.
+1. O oposto de `BNE` é `BEQ`. Tente escrever um programa que faça uso de `BEQ`.
+2. `BCC` e `BCS`("Ramificar ao desativar carry" e "Ramificar ao ativar carry")
+   são usadas para ramificar de acordo com a flag de carry. Escreva um programa
+   que use um desses dois.
 
 
-<h2 id='addressing'>Addressing modes</h2>
+<h2 id='addressing'>Modos de endereçamento</h2>
 
-The 6502 uses a 16-bit address bus, meaning that there are 65536 bytes of
-memory available to the processor. Remember that a byte is represented by two
-hex characters, so the memory locations are generally represented as `$0000 -
-$ffff`. There are various ways to refer to these memory locations, as detailed below.
+O 6502 usa um barramento de endereço de 16 bits, o que significa que existem
+65536 bytes de memória disponíveis para o processador. Lembre-se que um byte
+pode ser representado por dois caracteres hexadecimais, então os endereços são
+geralmente representados como `$0000 $ffff`. Existem diversas formas de se
+referir à estes endereços de memória, detalhados abaixo.
 
-With all these examples you might find it helpful to use the memory monitor to
-watch the memory change. The monitor takes a starting memory location and a
-number of bytes to display from that location. Both of these are hex values.
-For example, to display 16 bytes of memory from `$c000`, enter `c000` and `10`
-into **Start** and **Length**, respectively.
+Com todos esses exemplos você pode achar útil usar o monitor de memória
+para observar as mudanças na memória. O monitor recebe uma localização
+de memória inicial e um número de bytes para monitorar daquele endereço
+em diante. Ambos são valores hexadecimais. Por exemplo, para mostrar 16
+bytes de memória de `$c000`, digite `c000` e `10` nos campos de
+**Início** e **Comprimento**, respectivamente.
 
-### Absolute: `$c000` ###
+### Absoluto: `$c000` ###
 
-With absolute addressing, the full memory location is used as the argument to the instruction. For example:
+Com o endereçamento absoluto, o endereço completo do local na memória é utilizado
+como argumento para a instrução. Por exemplo:
 
-    STA $c000 ;Store the value in the accumulator at memory location $c000
+    STA $c000 ; Armazena o valor do acumulador na memória no endereço $c000
 
-### Zero page: `$c0` ###
+### Página zero: `$c0` ###
 
-All instructions that support absolute addressing (with the exception of the jump
-instructions) also have the option to take a single-byte address. This type of
-addressing is called "zero page" - only the first page (the first 256 bytes) of
-memory is accessible. This is faster, as only one byte needs to be looked up,
-and takes up less space in the assembled code as well.
+Todas as instruções que suportam o endereçamento absoluto (com exceção
+das instruções de salto) também tem a opção de receber um endereço de um único
+byte. Esse tipo de endereçamento é chamado de "página zero", com ele, apenas
+a primeira página (Os primeiros 256 bytes) de memória é acessível. Isso é
+mais rápido, tendo em vista que apenas um byte precisa ser buscado, e ocupa
+menos espaço no código montado.
 
-### Zero page,X: `$c0,X` ###
+### Página zero,X: `$c0,X` ###
+
+Aqui é onde o endereçamento começa a ficar interessante. Nesse modo, um endereço
+na página zero é dado, e então o valor do registrador `X` é adicionado.
 
 This is where addressing gets interesting. In this mode, a zero page address is given, and then the value of the `X` register is added. Here is an example:
 
-    LDX #$01   ;X is $01
-    LDA #$aa   ;A is $aa
-    STA $a0,X ;Store the value of A at memory location $a1
-    INX        ;Increment X
-    STA $a0,X ;Store the value of A at memory location $a2
+    LDX #$01   ;X é $01
+    LDA #$aa   ;A é $aa
+    STA $a0,X ; Armazena o valor de A no endereço $a1
+    INX        ; Incrementa X
+    STA $a0,X ; Armazena o valor de A no endereço $a2
 
-If the result of the addition is larger than a single byte, the address wraps around. For example:
+Se o resultado da adição é maior que um único byte, o endereço irá retornar. Por exemplo:
 
     LDX #$05
-    STA $ff,X ;Store the value of A at memory location $04
+    STA $ff,X ; Armazena o valor de A no endereço $04
 
-### Zero page,Y: `$c0,Y` ###
+### Página zero,Y: `$c0,Y` ###
 
-This is the equivalent of zero page,X, but can only be used with `LDX` and `STX`.
+Este é equivalente ao modo de endereçamento página zero,X, mas pode apenas
+ser usado com as instruções `LDX` e `STX`.
 
-### Absolute,X and absolute,Y: `$c000,X` and `$c000,Y` ###
+### Absoluto,X e absoluto,Y: `$c000,X` e `$c000,Y` ###
 
-These are the absolute addressing versions of zero page,X and zero page,Y. For example:
+Estas são as versões absolutas do modo de endereçamento página zero,X e
+página zero,Y. Por exemplo:
 
     LDX #$01
-    STA $0200,X ;Store the value of A at memory location $0201
+    STA $0200,X ; Armazena o valor de A no endereço $0201
 
-Unlike zero page,Y, absolute,Y can't be used with `STX` but can be used with `LDA` and `STA`.
+Diferentemente do modo página zero,Y, absoluto,Y não pode ser usado
+com a instrução `STX`, mas pode ser usado com as instruções
+`LDA` e `STA`.
 
-### Immediate: `#$c0` ###
+### Imediato: `#$c0` ###
 
-Immediate addressing doesn't strictly deal with memory addresses - this is the
-mode where actual values are used. For example, `LDX #$01` loads the value
-`$01` into the `X` register. This is very different to the zero page
-instruction `LDX $01` which loads the value at memory location `$01` into the
-`X` register.
+Endereçamento imediato não lida estritamente com endereços de memória, esse
+é o modo onde valores literais são usados. Por exemplo, `LDX #$01` carrega
+o valor `$01` para o registrador `X`. É bem diferente da instrução página
+zero `LDX $01`, que carrega o valor armazenado no endereço de memória $01
+para o registrador `X`.
 
-### Relative: `$c0` (or label) ###
+### Relativo: `$c0` (ou rótulo) ###
 
-Relative addressing is used for branching instructions. These instructions take
-a single byte, which is used as an offset from the following instruction.
+Endereçamento relativo é usado para instruções de ramificação. Estas
+instruções usam um único byte, que é usado para marcar um deslocamento
+da próxima instrução.
 
-Assemble the following code, then click the **Hexdump** button to see the assembled code.
+Monte o código a seguir, e clique no botão **Hexdump** para ver o código montado.
 
 {% include start.html %}
   LDA #$01
   CMP #$02
-  BNE notequal
+  BNE naoigual
   STA $22
-notequal:
+naoigual:
   BRK
 {% include end.html %}
 
-The hex should look something like this:
+O código hexadecimal deve se parecer com isso:
 
     a9 01 c9 02 d0 02 85 22 00
 
-`a9` and `c9` are the processor opcodes for immediate-addressed `LDA` and `CMP`
-respectively. `01` and `02` are the arguments to these instructions. `d0` is
-the opcode for `BNE`, and its argument is `02`. This means "skip over the next
-two bytes" (`85 22`, the assembled version of `STA $22`). Try editing the code
-so `STA` takes a two-byte absolute address rather than a single-byte zero page
-address (e.g. change `STA $22` to `STA $2222`). Reassemble the code and look at
-the hexdump again - the argument to `BNE` should now be `03`, because the
-instruction the processor is skipping past is now three bytes long.
+`a9` e `c9` são os opcodes do processador para  as instruções
+`LDA` e `CMP` em modo de endereçamento imediato, respectivamente.
+`01` e `02` são os argumentos dessas instruções. `d0` é o opcode
+para a instrução `BNE` e seu argumento é `02`. Isso significa
+"avance os próximos dois bytes e continue a execução de lá".
+(`85 22`, a versão montada da instrução `STA $22`). Tente alterar
+o código de forma que `STA` receba como argumento um endereço
+absoluto de dois bytes ao invés de um único byte da página zero
+(Por exemplo, mude `STA $22` para `STA $2222`). Remonte o código
+e olhe novamente para o hexdump. O argumento para a instrução
+`BNE` deve agora ser `03`, pois a instrução para a qual o
+processador está avançando está agora a uma distância de
+três bytes.
 
-### Implicit ###
+### Implícita ###
 
-Some instructions don't deal with memory locations (e.g. `INX` - increment the
-`X` register). These are said to have implicit addressing - the argument is
-implied by the instruction.
+Algumas instruções não lidam com endereços de memória
+(`INX` é um exemplo, incrementa o registrador `X`). Essas
+são instruções que usam o modo de endereçamento implícito, já
+que o argumento está implícito pela definição da instrução.
 
 ### Indirect: `($c000)` ###
 
